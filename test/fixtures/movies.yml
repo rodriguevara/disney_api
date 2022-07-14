@@ -1,0 +1,32 @@
+# == Schema Information
+#
+# Table name: movies
+#
+#  id            :integer          not null, primary key
+#  creation_date :date
+#  name          :string
+#  rating        :integer
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  genre_id      :integer          not null
+#
+# Indexes
+#
+#  index_movies_on_genre_id  (genre_id)
+#
+# Foreign Keys
+#
+#  genre_id  (genre_id => genres.id)
+#
+
+one:
+  name: MyString
+  creation_date: 2022-07-13
+  rating: 1
+  genre: one
+
+two:
+  name: MyString
+  creation_date: 2022-07-13
+  rating: 1
+  genre: two
