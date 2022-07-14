@@ -3,9 +3,26 @@ class CharactersController < ApplicationController
 
   # GET /characters
   def index
-    @characters = Character.all
+    if params[:name].present? #si encuentra parametros de :name mostrará los personajes que se correspondan
+      @characters = Character.where("name LIKE ?", "%" + params[:name] +"%")
+      render json: @characters, only: [:name]
 
-    render json: @characters, only: [:name]
+    elsif params[:age].present? #si encuentra parametros de :age mostrará los personajes que se correspondan
+      @characters = Character.where("age = ?", params[:age])
+      render json: @characters, only: [:name, :age]
+
+    elsif params[:weight].present? #si encuentra parametros de :age mostrará los personajes que se correspondan
+      @characters = Character.where("weight = ?", params[:weight])
+      render json: @characters, only: [:name, :weight]
+
+    elsif params[:movies].present? #si encuentra parametros de peliculas asociadas mostrará los personajes que se correspondan
+      @characters = Character.joins(:movies).where("movies.id = ?", params[:movies]).distinct
+      render json: @characters, only: [:name]
+
+    else
+      @characters = Character.all
+      render json: @characters, only: [:name]
+    end
   end
 
   # GET /characters/1
