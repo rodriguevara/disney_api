@@ -8,21 +8,21 @@ class MoviesController < ApplicationController
     
     if params[:name].present? #si encuentra parametros de :name mostrará los que se correspondan
       @movies = Movie.where("name LIKE ?", "%" + params[:name] +"%")
-      render json: @movies, only: [:name, :creation_date]
+      render json: @movies, only: [:name, :creation_date],  include: {image: {only: :name}}
     elsif params[:genre_id].present? #si encuentra parametros de genero mostrará los que se corresponda
       @movies = Movie.where("genre_id = ?", params[:genre_id])
-      render json: @movies, only: [:name, :creation_date, :genre_id]
+      render json: @movies, only: [:name, :creation_date, :genre_id] ,  include: {image: {only: :name}}
     elsif params[:order].present? #si encuentra parametros de orden mostrará ordenados Ascendente o descendente segun corresponda
       if params[:order] == "ASC"
         @movies = Movie.order(creation_date: :asc)
-        render json: @movies, only: [:name, :creation_date]
+        render json: @movies, only: [:name, :creation_date] ,  include: {image: {only: :name}}
       elsif params[:order] == "DESC"
         @movies = Movie.order(creation_date: :desc)
-        render json: @movies, only: [:name, :creation_date]
+        render json: @movies, only: [:name, :creation_date],  include: {image: {only: :name}}
       end
     else #si no encuentra ningun parametro muestra toda la lista
       @movies = Movie.all
-      render json: @movies, only: [:name, :creation_date]
+      render json: @movies, only: [:name, :creation_date], include: {image: {only: :name}}
     end
   end
   
@@ -30,7 +30,8 @@ class MoviesController < ApplicationController
 
   # GET /movies/1
   def show
-    render json: @movie, except: [:id, :created_at, :updated_at], include: {characters: {only: :name}}
+    render json: @movie, except: [:id, :created_at, :updated_at], include: [:characters , :image]
+    
   end
 
   # POST /movies
@@ -66,6 +67,6 @@ class MoviesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def movie_params
-      params.require(:movie).permit(:name, :creation_date, :rating, :genre_id)
+      params.require(:movie).permit(:name, :creation_date, :rating, :genre_id, :image)
     end
 end

@@ -5,29 +5,29 @@ class CharactersController < ApplicationController
   def index
     if params[:name].present? #si encuentra parametros de :name mostrará los personajes que se correspondan
       @characters = Character.where("name LIKE ?", "%" + params[:name] +"%")
-      render json: @characters, only: [:name]
+      render json: @characters, only: [:name] , include: {image: {only: :name}}
 
     elsif params[:age].present? #si encuentra parametros de :age mostrará los personajes que se correspondan
       @characters = Character.where("age = ?", params[:age])
-      render json: @characters, only: [:name, :age]
+      render json: @characters, only: [:name, :age], include: {movies: {only: :name}}
 
     elsif params[:weight].present? #si encuentra parametros de :age mostrará los personajes que se correspondan
       @characters = Character.where("weight = ?", params[:weight])
-      render json: @characters, only: [:name, :weight]
+      render json: @characters, only: [:name, :weight], include: {movies: {only: :name}}
 
     elsif params[:movies].present? #si encuentra parametros de peliculas asociadas mostrará los personajes que se correspondan
       @characters = Character.joins(:movies).where("movies.id = ?", params[:movies]).distinct
-      render json: @characters, only: [:name]
+      render json: @characters, only: [:name], include: {movies: {only: :name}}
 
     else
       @characters = Character.all
-      render json: @characters, only: [:name]
+      render json: @characters, only: [:name], include: {image: {only: :name}}
     end
   end
 
   # GET /characters/1
   def show
-    render json: @character, except: [:id, :created_at, :updated_at], include: {movies: {only: :name}}
+    render json: @character, except: [:id, :created_at, :updated_at], include: [:movies , :image]
   end
 
   # POST /characters
@@ -63,6 +63,6 @@ class CharactersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def character_params
-      params.require(:character).permit(:name, :age, :weight, :history)
+      params.require(:character).permit(:name, :age, :weight, :history, :image)
     end
 end

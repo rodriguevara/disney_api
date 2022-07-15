@@ -5,12 +5,12 @@ class GenresController < ApplicationController
   def index
     @genres = Genre.all
 
-    render json: @genres, except: [ :created_at, :updated_at]
+    render json: @genres, except: [ :created_at, :updated_at] , include: {image: {only: :name}}
   end
 
   # GET /genres/1
   def show
-    render json: @genre, except: [:created_at, :updated_at], include: {movies: {only: :name}}
+    render json: @genre, except: [:created_at, :updated_at], include: [:movies , :image]# include: {movies: {only: :name}}
   end
 
   # POST /genres
@@ -46,6 +46,6 @@ class GenresController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def genre_params
-      params.require(:genre).permit(:name)
+      params.require(:genre).permit(:name, :image)
     end
 end
