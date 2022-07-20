@@ -4,8 +4,9 @@ class RegistrationsController < Devise::RegistrationsController
   respond_to :json
 
   def create
-    build_resource(sign_up_params)
+    @user = build_resource(sign_up_params)
      resource.save
+     UserMailer.with(user: @user).welcome_email.deliver_later
      render json: resource, status: :created
    end
   # before_action :configure_sign_up_params, only: [:create]
