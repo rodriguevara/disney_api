@@ -1,12 +1,10 @@
 class MoviesController < ApplicationController
   before_action :set_movie, only: %i[ show update destroy ]
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
 
 
   # GET /movies
   def index
-    #@movies = Movie.all
-    #render json: @movies, only: [:name, :creation_date]
     
     if params[:name].present? #si encuentra parametros de :name mostrará los que se correspondan
       @movies = Movie.where("name LIKE ?", "%" + params[:name] +"%")
@@ -21,6 +19,10 @@ class MoviesController < ApplicationController
       elsif params[:order] == "DESC"
         @movies = Movie.order(creation_date: :desc)
         render json: @movies, only: [:name, :creation_date],  include: {image: {only: :name}}
+      else
+        @movies = Movie.all
+      render json: @movies, only: [:name, :creation_date], include: {image: {only: :name}}
+
       end
     else #si no encuentra ningun parametro muestra toda la lista
       @movies = Movie.all
@@ -31,13 +33,14 @@ class MoviesController < ApplicationController
  
 
   # GET /movies/1
-  def show
+  def show #muestra el detalle de la película/serie
     render json: @movie, except: [:id, :created_at, :updated_at], include: [:characters , :image]
     
+
   end
 
   # POST /movies
-  def create
+  def create #creacion de peli
     @movie = Movie.new(movie_params)
 
     if @movie.save
@@ -48,7 +51,7 @@ class MoviesController < ApplicationController
   end
 
   # PATCH/PUT /movies/1
-  def update
+  def update #modificacion de peli
     if @movie.update(movie_params)
       render json: @movie
     else
@@ -56,7 +59,7 @@ class MoviesController < ApplicationController
     end
   end
 
-  # DELETE /movies/1
+  # DELETE /movies/1 Elimina peli
   def destroy
     @movie.destroy
   end
@@ -65,6 +68,8 @@ class MoviesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_movie
       @movie = Movie.find(params[:id])
+    rescue ActiveRecord::RecordNotFound #si no encuentra el id de la peli/serie salva el error 
+      render json: "Movie ID not found in DB"
     end
 
     # Only allow a list of trusted parameters through.

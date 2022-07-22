@@ -1,6 +1,6 @@
 class CharactersController < ApplicationController
   before_action :set_character, only: %i[ show update destroy ]
-
+  #before_action :authenticate_user!
   # GET /characters
   def index
     if params[:name].present? #si encuentra parametros de :name mostrará los personajes que se correspondan
@@ -20,17 +20,17 @@ class CharactersController < ApplicationController
       render json: @characters, only: [:name], include: {movies: {only: :name}}
 
     else
-      @characters = Character.all
+      @characters = Character.all #si no encuentra ningun parametro muestra toda la lista
       render json: @characters, only: [:name], include: {image: {only: :name}}
     end
   end
 
-  # GET /characters/1
+  # GET /characters/1 personaje en detalle
   def show
     render json: @character, except: [:id, :created_at, :updated_at], include: [:movies , :image]
   end
 
-  # POST /characters
+  # POST /characters creacion de personaje
   def create
     @character = Character.new(character_params)
 
@@ -41,7 +41,7 @@ class CharactersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /characters/1
+  # PATCH/PUT /characters/1 modificacion de personaje
   def update
     if @character.update(character_params)
       render json: @character
@@ -50,7 +50,7 @@ class CharactersController < ApplicationController
     end
   end
 
-  # DELETE /characters/1
+  # DELETE /characters/1 elimina personaje
   def destroy
     @character.destroy
   end
@@ -59,6 +59,8 @@ class CharactersController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_character
       @character = Character.find(params[:id])
+    rescue ActiveRecord::RecordNotFound #si no encuentra el id del personaje salva el error 
+      render json: "Character ID not found in DB"
     end
 
     # Only allow a list of trusted parameters through.
