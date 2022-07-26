@@ -7,7 +7,7 @@ class MoviesController < ApplicationController
   def index
     
     if params[:name].present? #si encuentra parametros de :name mostrará los que se correspondan
-      @movies = Movie.where("name LIKE ?", "%" + params[:name] +"%")
+      @movies = Movie.where("name LIKE ?", Movie.sanitize_sql_like(params[:name]) + "%") #no funciona el sanitize para cuando se coloca el caracter "%" como parámetro
       render json: @movies, only: [:name, :creation_date],  include: {image: {only: :name}}
     elsif params[:genre_id].present? #si encuentra parametros de genero mostrará los que se corresponda
       @movies = Movie.where("genre_id = ?", params[:genre_id])
