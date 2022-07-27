@@ -7,3 +7,4 @@
 #   Character.create(name: "Luke", movie: movies.first)
 Genre.create(name: "action")
 Genre.create(name: "terror")
+Movie.create(name: "Spiderman: Far from home", creation_date: "05/07/2018", rating: 3, genre_id: 1)

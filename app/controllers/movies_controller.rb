@@ -1,6 +1,6 @@
 class MoviesController < ApplicationController
   before_action :set_movie, only: %i[ show update destroy ]
-  #before_action :authenticate_user!
+  before_action :authenticate_user!
 
 
   # GET /movies
@@ -26,7 +26,7 @@ class MoviesController < ApplicationController
       end
     else #si no encuentra ningun parametro muestra toda la lista
       @movies = Movie.all
-      render json: @movies, only: [:name, :creation_date], include: {image: {only: :name}}
+      render json: @movies, only: [:name, :creation_date, :id], include: {image: {only: :name}}
     end
   end
   

@@ -1,7 +1,7 @@
 class CharactersController < ApplicationController
   before_action :set_character, only: %i[ show update destroy ]
-  #before_action :authenticate_user!
-  # GET /characters
+  before_action :authenticate_user!
+  
   def index
     if params[:name].present? #si encuentra parametros de :name mostrará los personajes que se correspondan
       @characters = Character.where("name LIKE ?", "%" + params[:name] +"%")
@@ -21,7 +21,7 @@ class CharactersController < ApplicationController
 
     else
       @characters = Character.all #si no encuentra ningun parametro muestra toda la lista
-      render json: @characters, only: [:name], include: {image: {only: :name}}
+      render json: @characters, only: [:name, :id], include: {image: {only: :name}}
     end
   end
 

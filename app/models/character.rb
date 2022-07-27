@@ -11,7 +11,7 @@
 #  updated_at :datetime         not null
 #
 class Character < ApplicationRecord
-    has_many :character_movies
+    has_many :character_movies, dependent: :destroy
     has_many :movies, through: :character_movies
     has_one_attached :image, :dependent => :destroy
 end
