@@ -17,7 +17,7 @@
 #
 #  character_id  (character_id => characters.id)
 #  movie_id      (movie_id => movies.id)
-#
+# Tabla interrelacional entre personajes y películas
 class CharacterMovie < ApplicationRecord
   belongs_to :character
   belongs_to :movie

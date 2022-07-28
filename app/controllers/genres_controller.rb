@@ -1,6 +1,6 @@
 class GenresController < ApplicationController
   before_action :set_genre, only: %i[ show update destroy ]
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
 
   # GET /genres
   def index #Muestra la lista de géneros

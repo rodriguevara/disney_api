@@ -1,6 +1,6 @@
 class CharactersController < ApplicationController
   before_action :set_character, only: %i[ show update destroy ]
-  before_action :authenticate_user!
+  #before_action :authenticate_user!
   
   def index
     if params[:name].present? #si encuentra parametros de :name mostrará los personajes que se correspondan
